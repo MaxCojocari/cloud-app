@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ClientLogModule } from './client-log/client-log.module';
 import { ClientLog } from './client-log/client-log.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
