@@ -10,3 +10,4 @@ docker-compose.yml
 .prettierrc
 test
 coverage
+.vscode
