@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-app
+  namespace: cloud-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloud-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: cloud-app
+    spec:
+      containers:
+        - name: cloud-app
+          image: maxcojocari/cloud-app:v1.1.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_HOST
+              value: db-service
+            - name: DB_PORT
+              value: '5432'
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_NAME
+              value: cloud-app
+            - name: PORT
+              value: '3000'
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
